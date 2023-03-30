@@ -3,7 +3,7 @@ import express, { json } from "express";
 import { AuthRoutes } from "./routes/auth.route";
 import { MazeRoutes } from "./routes/maze.route";
 import { UserRoutes } from "./routes/user.route";
-const PORT = process.env.PORT||5091;
+const PORT = process.env.PORT || 5091;
 const app = express();
 config();
 app.use(json());
