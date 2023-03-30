@@ -19,5 +19,12 @@ export const create = async (req: Request, res: Response) => {
     });
 
     res.send(user);
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+    res.status(500).send();
+  }
 };

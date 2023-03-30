@@ -30,6 +30,11 @@ export const login = async (req: Request, res: Response) => {
       access_token,
     });
   } catch (error) {
-    return res.status(500).send();
+    if (error instanceof Error) {
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+    res.status(500).send();
   }
 };

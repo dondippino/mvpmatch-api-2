@@ -25,7 +25,14 @@ export const create = async (req: Request, res: Response) => {
 
       res.send(maze);
     }
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+    res.status(500).send();
+  }
 };
 
 export const getMaze = async (req: Request, res: Response) => {
@@ -77,7 +84,14 @@ export const getAllMazes = async (req: Request, res: Response) => {
 
       res.send(mazes);
     }
-  } catch (error) {}
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+    res.status(500).send();
+  }
 };
 
 export const solution = async (maze: Maze) => {
