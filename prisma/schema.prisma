@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  username String @id
+  password String
+  Maze     Maze[]
+}
+
+model Maze {
+  id       Int    @id @default(autoincrement())
+  entrance String
+  gridSize String
+  walls    Json
+  owner    User   @relation(fields: [userId], references: [username])
+  userId   String
+
+  @@unique(fields: [id, userId], name: "mazeUserId")
+}
