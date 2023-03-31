@@ -3,9 +3,8 @@ import { prisma } from "../../prisma";
 import {
   BadRequestError,
   BaseError,
-  NoAceessError,
-  NotFoundError,
   ServerError,
+  UnauthorizedError,
 } from "../errors";
 import { comparePassord, createJwtToken, isUserParamValid } from "../utils";
 
@@ -22,7 +21,7 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      NotFoundError("User not found");
+      UnauthorizedError("Incorrect login credentials");
     }
 
     const hasCorrectPassword = await comparePassord(
@@ -30,7 +29,7 @@ export const login = async (req: Request, res: Response) => {
       user.password
     );
     if (!hasCorrectPassword) {
-      NoAceessError("Incorrect login credentials");
+      UnauthorizedError("Incorrect login credentials");
     }
 
     const access_token = createJwtToken({ username: body.username });
