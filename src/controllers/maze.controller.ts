@@ -117,7 +117,8 @@ export const solution = async (maze: Maze) => {
   const y = entrance.slice(0, 1).charCodeAt(0) - 65;
 
   if (x < 0 || x >= rows || y < 0 || x >= columns) {
-    throw new Error("Maze has no solution");
+    ServerError("Maze has no solution");
+    return;
   }
 
   const grid: [number, number, number, [number, number][]][][] = [];
@@ -196,7 +197,8 @@ export const solution = async (maze: Maze) => {
   const max = [Number.MIN_VALUE, -1];
 
   if (!paths || paths.length === 0) {
-    throw new Error("Maze has no solution");
+    ServerError("Maze has no solution");
+    return;
   }
 
   paths.forEach((path, index) => {
