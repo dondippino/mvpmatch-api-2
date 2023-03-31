@@ -1,6 +1,12 @@
 import { Maze } from "@prisma/client";
 import { Request, Response } from "express";
 import { prisma } from "../../prisma";
+import {
+  BadRequestError,
+  BaseError,
+  NotFoundError,
+  ServerError,
+} from "../errors";
 import { isMinMax, isPostMazeParamValid, isSession } from "../utils";
 
 export const create = async (req: Request, res: Response) => {
@@ -9,7 +15,7 @@ export const create = async (req: Request, res: Response) => {
     if (isSession(session)) {
       const { body } = req;
       if (!isPostMazeParamValid(body)) {
-        return res.status(400).send({ message: "Invalid input" });
+        return BadRequestError("Invalid input");
       }
 
       const maze = await prisma.maze.create({
@@ -26,12 +32,12 @@ export const create = async (req: Request, res: Response) => {
       res.send(maze);
     }
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).send({
+    if (error instanceof BaseError) {
+      return res.status(error.status).send({
         message: error.message,
       });
     }
-    res.status(500).send();
+    ServerError(null, res);
   }
 };
 
@@ -42,7 +48,7 @@ export const getMaze = async (req: Request, res: Response) => {
     const { steps } = query;
 
     if (!isMinMax(steps) || isNaN(parseInt(mazeId))) {
-      return res.status(400).send({ message: "Invalid input" });
+      return BadRequestError("Invalid input");
     }
 
     const maze = await prisma.maze.findUnique({
@@ -52,19 +58,19 @@ export const getMaze = async (req: Request, res: Response) => {
     });
 
     if (!maze) {
-      return res.status(404).send();
+      return NotFoundError("maze not found");
     }
 
     const paths = await solution(maze);
 
     res.send({ path: paths[steps] });
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).send({
+    if (error instanceof BaseError) {
+      return res.status(error.status).send({
         message: error.message,
       });
     }
-    res.status(500).send();
+    ServerError(null, res);
   }
 };
 
@@ -85,12 +91,12 @@ export const getAllMazes = async (req: Request, res: Response) => {
       res.send(mazes);
     }
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).send({
+    if (error instanceof BaseError) {
+      return res.status(error.status).send({
         message: error.message,
       });
     }
-    res.status(500).send();
+    ServerError(null, res);
   }
 };
 
