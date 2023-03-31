@@ -11,7 +11,7 @@ export const NotFoundError = (message?: string, res?: Response) => {
   err.status = 404;
   err.message = message ?? "Not Found";
   if (res) {
-    return res.status(err.status).send(err.message);
+    return res.status(err.status).send({ message: err.message });
   }
   throw err;
 };
@@ -21,7 +21,7 @@ export const UnauthorizedError = (message?: string, res?: Response) => {
   err.status = 401;
   err.message = message ?? "Unauthorized";
   if (res) {
-    return res.status(err.status).send(err.message);
+    return res.status(err.status).send({ message: err.message });
   }
   throw err;
 };
@@ -31,7 +31,7 @@ export const NoAceessError = (message?: string, res?: Response) => {
   err.status = 403;
   err.message = message ?? "Forbidden";
   if (res) {
-    return res.status(err.status).send(err.message);
+    return res.status(err.status).send({ message: err.message });
   }
   throw err;
 };
@@ -41,7 +41,7 @@ export const BadRequestError = (message?: string, res?: Response) => {
   err.status = 400;
   err.message = message ?? "Bad Request";
   if (res) {
-    return res.status(err.status).send(err.message);
+    return res.status(err.status).send({ message: err.message });
   }
   throw err;
 };
@@ -51,7 +51,7 @@ export const ServerError = (message?: string, res?: Response) => {
   err.status = 500;
   err.message = message ?? "Server Error";
   if (res) {
-    return res.status(err.status).send(err.message);
+    return res.status(err.status).send({ message: err.message });
   }
   throw err;
 };
