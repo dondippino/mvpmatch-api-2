@@ -10,5 +10,5 @@
         "src": "/(.*)",
         "dest": "/src/index.ts"
     }],
-    "regions": ["eu-central-1"]
+    "regions": ["fra1"]
 }
