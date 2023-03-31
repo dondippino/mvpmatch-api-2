@@ -1,12 +1,19 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma";
+import {
+  BadRequestError,
+  BaseError,
+  NoAceessError,
+  NotFoundError,
+  ServerError,
+} from "../errors";
 import { comparePassord, createJwtToken, isUserParamValid } from "../utils";
 
 export const login = async (req: Request, res: Response) => {
   try {
     const { body } = req;
     if (!isUserParamValid(body)) {
-      return res.status(400).send({ message: "Invalid entry" });
+      BadRequestError("Invalid entry");
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -15,14 +22,15 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: "User not found" });
+      NotFoundError("User not found");
     }
+
     const hasCorrectPassword = await comparePassord(
       body.password,
       user.password
     );
     if (!hasCorrectPassword) {
-      return res.status(403).send({ message: "Incorrect login credentials" });
+      NoAceessError("Incorrect login credentials");
     }
 
     const access_token = createJwtToken({ username: body.username });
@@ -30,11 +38,11 @@ export const login = async (req: Request, res: Response) => {
       access_token,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).send({
+    if (error instanceof BaseError) {
+      return res.status(error.status).send({
         message: error.message,
       });
     }
-    res.status(500).send();
+    ServerError(null, res);
   }
 };
