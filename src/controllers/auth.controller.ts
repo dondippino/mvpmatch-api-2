@@ -13,6 +13,7 @@ export const login = async (req: Request, res: Response) => {
     const { body } = req;
     if (!isUserParamValid(body)) {
       BadRequestError("Invalid entry");
+      return;
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -22,6 +23,7 @@ export const login = async (req: Request, res: Response) => {
 
     if (!user) {
       UnauthorizedError("Incorrect login credentials");
+      return;
     }
 
     const hasCorrectPassword = await comparePassord(
@@ -30,6 +32,7 @@ export const login = async (req: Request, res: Response) => {
     );
     if (!hasCorrectPassword) {
       UnauthorizedError("Incorrect login credentials");
+      return;
     }
 
     const access_token = createJwtToken({ username: body.username });

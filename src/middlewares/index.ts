@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
+import { UnauthorizedError } from "../errors";
 
 export const verifyToken = (
   req: Request,
@@ -10,23 +11,26 @@ export const verifyToken = (
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
     if (!token || !process.env.AUTH_PUBLIC_KEY) {
-      return res.sendStatus(401);
+      UnauthorizedError("You are not authorized");
+      return;
     }
 
     const session = verify(token, process.env.AUTH_PUBLIC_KEY);
 
     if (typeof session === "string" || !session.exp) {
-      return res.status(401).send({ message: "Invalid session" });
+      UnauthorizedError("Invalid session");
+      return;
     }
 
     res.locals.session = session;
     const checkExpiry = Math.floor(Date.now() / 1000) - session.exp;
     if (checkExpiry >= 0) {
-      return res.status(401).send({ message: "Expired token" });
+      UnauthorizedError("Expired token");
+      return;
     }
 
     next();
   } catch (error) {
-    res.status(401).send();
+    UnauthorizedError("You are not authorized");
   }
 };
