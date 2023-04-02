@@ -1,4 +1,4 @@
-# MVPMAtch Product API
+# MVPMAtch Maze API
 
 ## Installation
 
