@@ -1,7 +1,12 @@
 import { Maze } from "@prisma/client";
 import { Request, Response } from "express";
 import { prisma } from "../../prisma";
-import { BadRequestError, NotFoundError, ServerError } from "../errors";
+import {
+  BadRequestError,
+  NotFoundError,
+  ServerError,
+  UnauthorizedError,
+} from "../errors";
 import {
   handleError,
   isMinMax,
@@ -9,15 +14,22 @@ import {
   isSession,
 } from "../utils";
 
+// Create a Maze
 export const create = async (req: Request, res: Response) => {
   try {
+    // Fetch the session
     const session = res.locals.session;
+
+    // If session is valid
     if (isSession(session)) {
       const { body } = req;
+
+      // Validate the bosy of the request
       if (!isPostMazeParamValid(body)) {
         throw new BadRequestError("Invalid input");
       }
 
+      // Create maze in the database
       const maze = await prisma.maze.create({
         data: {
           ...body,
@@ -29,33 +41,39 @@ export const create = async (req: Request, res: Response) => {
         },
       });
 
-      res.send(maze);
+      return res.send(maze);
     }
+    throw new UnauthorizedError("Invalid session");
   } catch (error) {
     handleError(error, res);
   }
 };
 
+// Get solution to maze
 export const getMazeSolution = async (req: Request, res: Response) => {
   try {
     const { params, query } = req;
     const { mazeId } = params;
     const { steps } = query;
 
+    // Validate the parameters and the query strings
     if (!isMinMax(steps) || isNaN(parseInt(mazeId))) {
       throw new BadRequestError("Invalid input");
     }
 
+    // Fetch maze from the database
     const maze = await prisma.maze.findUnique({
       where: {
         id: parseInt(mazeId),
       },
     });
 
+    // If maze is nt found, throw error
     if (!maze) {
       throw new NotFoundError("maze not found");
     }
 
+    // Solve the maze and get the shortest and longest paths
     const paths = await solution(maze);
 
     res.send({ path: paths[steps] });
@@ -64,9 +82,13 @@ export const getMazeSolution = async (req: Request, res: Response) => {
   }
 };
 
+// Get list of mazes
 export const getAllMazes = async (req: Request, res: Response) => {
   try {
+    // Fetch session
     const session = res.locals.session;
+
+    // If session is valid
     if (isSession(session)) {
       const mazes = await prisma.maze.findMany({
         where: {
@@ -78,13 +100,16 @@ export const getAllMazes = async (req: Request, res: Response) => {
         },
       });
 
-      res.send(mazes);
+      return res.send(mazes);
     }
+    throw new UnauthorizedError("Invalid session");
   } catch (error) {
     handleError(error, res);
   }
 };
 
+// Solution to the maze using Breadth First Search algorithm
+// using iterative approach
 export const solution = async (maze: Maze) => {
   const { entrance, gridSize, walls: wallsArray } = maze;
 
