@@ -1,0 +1,163 @@
+{
+	"info": {
+		"_postman_id": "67c2ae0c-6138-4ec0-8eeb-89f9f70382c3",
+		"name": "MVPMatchMazeVercel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "61641"
+	},
+	"item": [
+		{
+			"name": "Register User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"doe\",\r\n    \"password\":\"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvpmatch-api-2.vercel.app/users",
+					"protocol": "https",
+					"host": [
+						"mvpmatch-api-2",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log In",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"doe\",\r\n    \"password\":\"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvpmatch-api-2.vercel.app/login",
+					"protocol": "https",
+					"host": [
+						"mvpmatch-api-2",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Maze",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRvZSIsImlhdCI6MTY4MDIwMzcxNywiZXhwIjoxNjgwMjkwMTE3fQ.GxjulYAL2Dy6_ceUZQvXHIe9G1Pnan7ePrhJbF0rgYIrT-rIX_tSbCm03Pe825RmXju4Zel0qA-m5X4Y9E90RHRefzWw_WWGSLhLvTWFI3nslXoLXXKmKpK_F6cJvbJUV82jYRFMw6johlCGaf6jQIlsn_GjindbpiYVV2LaNC9y1IxL3DPDeF8E304eNrn73YGpYYcVEhqEX3PXavcHJQbyP5ZxEFhqXT68s_ykbco5FPWbx2o97nA4a0IiQBioNIV0HbwgGTEsVMV96IrbBMKnNR5-YviQYpp-iRANvQ5btRV7hT83NVb9oBna9g91uvpyzkMYR5AyxmR_SiM-QaDQFGTjrqo9XwmEYVNhsHHdKk983D1gZ2hyYhXY8QrbR4Eswggum1UTAoXAkFIW1M3wqN_QOEWtnb1Qn1SBVIsLtN3Y_UOdp6HqoBptP6-N8JQP0pSPQs9jzJhi2ZOp02t3fu514kCbWtlGgt8jcbE5VD3BN1Ohpuo4r1uOVoWnxRlII095H4Ekp0IBbaXNgYsIJ0CjlqSbjmEdBSMJybDs3k_nkoCVjePpktLLYVM3LL9e-z-HZbrIckejooep_YVD9kFy0Q9lbQ9vcaBt9H9l2ETTlZi4KA28MeXC0hmahQ0O_CTIDN7zJus8nguV6Pr0TVtgq1bk7SSEiNPuC78",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"entrance\": \"A8\",\r\n    \"gridSize\": \"8x8\",\r\n    \"walls\":[\"C1\", \"G1\", \"A2\", \"C2\", \"E2\", \"G2\", \"C3\", \"E3\", \"B4\", \"C4\", \"E4\", \"F4\", \"G4\", \"B5\", \"E5\", \"B6\", \"D6\", \"E6\", \"G6\", \"H6\", \"B7\", \"D7\", \"G7\", \"B8\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://mvpmatch-api-2.vercel.app/mazes",
+					"protocol": "https",
+					"host": [
+						"mvpmatch-api-2",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"mazes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Maze Solution",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRvZSIsImlhdCI6MTY4MDIwMzcxNywiZXhwIjoxNjgwMjkwMTE3fQ.GxjulYAL2Dy6_ceUZQvXHIe9G1Pnan7ePrhJbF0rgYIrT-rIX_tSbCm03Pe825RmXju4Zel0qA-m5X4Y9E90RHRefzWw_WWGSLhLvTWFI3nslXoLXXKmKpK_F6cJvbJUV82jYRFMw6johlCGaf6jQIlsn_GjindbpiYVV2LaNC9y1IxL3DPDeF8E304eNrn73YGpYYcVEhqEX3PXavcHJQbyP5ZxEFhqXT68s_ykbco5FPWbx2o97nA4a0IiQBioNIV0HbwgGTEsVMV96IrbBMKnNR5-YviQYpp-iRANvQ5btRV7hT83NVb9oBna9g91uvpyzkMYR5AyxmR_SiM-QaDQFGTjrqo9XwmEYVNhsHHdKk983D1gZ2hyYhXY8QrbR4Eswggum1UTAoXAkFIW1M3wqN_QOEWtnb1Qn1SBVIsLtN3Y_UOdp6HqoBptP6-N8JQP0pSPQs9jzJhi2ZOp02t3fu514kCbWtlGgt8jcbE5VD3BN1Ohpuo4r1uOVoWnxRlII095H4Ekp0IBbaXNgYsIJ0CjlqSbjmEdBSMJybDs3k_nkoCVjePpktLLYVM3LL9e-z-HZbrIckejooep_YVD9kFy0Q9lbQ9vcaBt9H9l2ETTlZi4KA28MeXC0hmahQ0O_CTIDN7zJus8nguV6Pr0TVtgq1bk7SSEiNPuC78",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://mvpmatch-api-2.vercel.app/mazes/1/solution?steps=min",
+					"protocol": "https",
+					"host": [
+						"mvpmatch-api-2",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"mazes",
+						"1",
+						"solution"
+					],
+					"query": [
+						{
+							"key": "steps",
+							"value": "min"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Mazes",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRvZSIsImlhdCI6MTY4MDIwMzcxNywiZXhwIjoxNjgwMjkwMTE3fQ.GxjulYAL2Dy6_ceUZQvXHIe9G1Pnan7ePrhJbF0rgYIrT-rIX_tSbCm03Pe825RmXju4Zel0qA-m5X4Y9E90RHRefzWw_WWGSLhLvTWFI3nslXoLXXKmKpK_F6cJvbJUV82jYRFMw6johlCGaf6jQIlsn_GjindbpiYVV2LaNC9y1IxL3DPDeF8E304eNrn73YGpYYcVEhqEX3PXavcHJQbyP5ZxEFhqXT68s_ykbco5FPWbx2o97nA4a0IiQBioNIV0HbwgGTEsVMV96IrbBMKnNR5-YviQYpp-iRANvQ5btRV7hT83NVb9oBna9g91uvpyzkMYR5AyxmR_SiM-QaDQFGTjrqo9XwmEYVNhsHHdKk983D1gZ2hyYhXY8QrbR4Eswggum1UTAoXAkFIW1M3wqN_QOEWtnb1Qn1SBVIsLtN3Y_UOdp6HqoBptP6-N8JQP0pSPQs9jzJhi2ZOp02t3fu514kCbWtlGgt8jcbE5VD3BN1Ohpuo4r1uOVoWnxRlII095H4Ekp0IBbaXNgYsIJ0CjlqSbjmEdBSMJybDs3k_nkoCVjePpktLLYVM3LL9e-z-HZbrIckejooep_YVD9kFy0Q9lbQ9vcaBt9H9l2ETTlZi4KA28MeXC0hmahQ0O_CTIDN7zJus8nguV6Pr0TVtgq1bk7SSEiNPuC78",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://mvpmatch-api-2.vercel.app/mazes",
+					"protocol": "https",
+					"host": [
+						"mvpmatch-api-2",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"mazes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
