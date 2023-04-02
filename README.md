@@ -1,4 +1,4 @@
-# MVPMAtch Maze API
+# MVPMatch Maze API
 
 ## Installation
 
@@ -16,3 +16,7 @@
 ## Testing
 
 - Run Unit Tests with `npm run test`
+
+## Postman Collection file
+
+- Postman collection file 'MVPMatchMazeVercel.postman_collection.json' is included in the root of the project
