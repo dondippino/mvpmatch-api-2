@@ -1,19 +1,18 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma";
+import { BadRequestError, UnauthorizedError } from "../errors";
 import {
-  BadRequestError,
-  BaseError,
-  ServerError,
-  UnauthorizedError,
-} from "../errors";
-import { comparePassord, createJwtToken, isUserParamValid } from "../utils";
+  comparePassord,
+  createJwtToken,
+  handleError,
+  isUserParamValid,
+} from "../utils";
 
 export const login = async (req: Request, res: Response) => {
   try {
     const { body } = req;
     if (!isUserParamValid(body)) {
-      BadRequestError("Invalid entry");
-      return;
+      throw new BadRequestError("Invalid entry");
     }
     const user = await prisma.user.findUnique({
       where: {
@@ -22,8 +21,7 @@ export const login = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      UnauthorizedError("Incorrect login credentials");
-      return;
+      throw new UnauthorizedError("Incorrect login credentials");
     }
 
     const hasCorrectPassword = await comparePassord(
@@ -31,8 +29,7 @@ export const login = async (req: Request, res: Response) => {
       user.password
     );
     if (!hasCorrectPassword) {
-      UnauthorizedError("Incorrect login credentials");
-      return;
+      throw new UnauthorizedError("Incorrect login credentials");
     }
 
     const access_token = createJwtToken({ username: body.username });
@@ -40,11 +37,6 @@ export const login = async (req: Request, res: Response) => {
       access_token,
     });
   } catch (error) {
-    if (error instanceof BaseError) {
-      return res.status(error.status).send({
-        message: error.message,
-      });
-    }
-    ServerError(null, res);
+    handleError(error, res);
   }
 };

@@ -1,13 +1,13 @@
 import { Maze } from "@prisma/client";
 import { Request, Response } from "express";
 import { prisma } from "../../prisma";
+import { BadRequestError, NotFoundError, ServerError } from "../errors";
 import {
-  BadRequestError,
-  BaseError,
-  NotFoundError,
-  ServerError,
-} from "../errors";
-import { isMinMax, isPostMazeParamValid, isSession } from "../utils";
+  handleError,
+  isMinMax,
+  isPostMazeParamValid,
+  isSession,
+} from "../utils";
 
 export const create = async (req: Request, res: Response) => {
   try {
@@ -15,7 +15,7 @@ export const create = async (req: Request, res: Response) => {
     if (isSession(session)) {
       const { body } = req;
       if (!isPostMazeParamValid(body)) {
-        return BadRequestError("Invalid input");
+        throw new BadRequestError("Invalid input");
       }
 
       const maze = await prisma.maze.create({
@@ -32,23 +32,18 @@ export const create = async (req: Request, res: Response) => {
       res.send(maze);
     }
   } catch (error) {
-    if (error instanceof BaseError) {
-      return res.status(error.status).send({
-        message: error.message,
-      });
-    }
-    ServerError(null, res);
+    handleError(error, res);
   }
 };
 
-export const getMaze = async (req: Request, res: Response) => {
+export const getMazeSolution = async (req: Request, res: Response) => {
   try {
     const { params, query } = req;
     const { mazeId } = params;
     const { steps } = query;
 
     if (!isMinMax(steps) || isNaN(parseInt(mazeId))) {
-      return BadRequestError("Invalid input");
+      throw new BadRequestError("Invalid input");
     }
 
     const maze = await prisma.maze.findUnique({
@@ -58,19 +53,14 @@ export const getMaze = async (req: Request, res: Response) => {
     });
 
     if (!maze) {
-      return NotFoundError("maze not found");
+      throw new NotFoundError("maze not found");
     }
 
     const paths = await solution(maze);
 
     res.send({ path: paths[steps] });
   } catch (error) {
-    if (error instanceof BaseError) {
-      return res.status(error.status).send({
-        message: error.message,
-      });
-    }
-    ServerError(null, res);
+    handleError(error, res);
   }
 };
 
@@ -91,12 +81,7 @@ export const getAllMazes = async (req: Request, res: Response) => {
       res.send(mazes);
     }
   } catch (error) {
-    if (error instanceof BaseError) {
-      return res.status(error.status).send({
-        message: error.message,
-      });
-    }
-    ServerError(null, res);
+    handleError(error, res);
   }
 };
 
@@ -117,8 +102,7 @@ export const solution = async (maze: Maze) => {
   const y = entrance.slice(0, 1).charCodeAt(0) - 65;
 
   if (x < 0 || x >= rows || y < 0 || x >= columns) {
-    ServerError("Maze has no solution");
-    return;
+    throw new ServerError("Maze has no solution");
   }
 
   const grid: [number, number, number, [number, number][]][][] = [];
@@ -197,8 +181,7 @@ export const solution = async (maze: Maze) => {
   const max = [Number.MIN_VALUE, -1];
 
   if (!paths || paths.length === 0) {
-    ServerError("Maze has no solution");
-    return;
+    throw new ServerError("Maze has no solution");
   }
 
   paths.forEach((path, index) => {

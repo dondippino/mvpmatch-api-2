@@ -1,5 +1,7 @@
 import { compare, hash } from "bcrypt";
+import { Response } from "express";
 import { sign } from "jsonwebtoken";
+import { BaseError } from "./errors";
 
 export type UserParam = { username: string; password: string };
 export type MazeParam = { gridSize: string; walls: string[]; entrance: string };
@@ -62,4 +64,15 @@ export const isSession = (payload: unknown): payload is Session => {
     (payload as Session).iat !== undefined &&
     (payload as Session).exp !== undefined
   );
+};
+
+export const handleError = (error: unknown, res: Response) => {
+  if (error instanceof BaseError) {
+    return res.status(error.status).send({
+      message: error.message,
+    });
+  } else if (error instanceof Error) {
+    return res.status(500).send({ message: error.message });
+  }
+  res.status(500).send({ message: "Server Error" });
 };
